@@ -98,8 +98,6 @@ We evaluated both **In-Memory Mode** (`32` Polars threads / `32` DuckDB threads)
 
 **Key Takeaways:**
 
-**Key Takeaways:**
-
 - **From Disk Spilling to In-Memory (`1B` Rows):** A 1-Billion-row workload that requires out-of-core disk spilling on a 32 GB laptop (`506.21s`) runs **entirely in memory in 3.3 minutes (`198.47s`)** on a 64 GB node.
 - **3x Server Envelope Expansion (`1B` to `3B` Rows):** On a 64 GB machine, in-memory mode reaches its limit at 1 billion rows (`56.05 GB` RAM). Enabling `spill_to_disk` expands the single-node **Data Quality Envelope by 3x**, validating **2 billion rows** in **9.6 minutes** and **3 billion rows** (49.50 GB Parquet / ~257.4 GB uncompressed) in **14.3 minutes** without requiring a multi-node cluster.
 - **Memory Behavior Across Scale (`1B` vs. `3B`):** At `1B` and `2B` rows, out-of-core mode holds total RAM steady at **`34.01 GB` – `35.16 GB`** (saving `22.04 GB` of RAM at `1B` compared to in-memory mode). At `3B` rows, the index overhead required to track 3 billion unique keys across temporary disk files pushes total process memory to **`61.41 GB`**, reaching the practical ceiling of a 64 GB node.
