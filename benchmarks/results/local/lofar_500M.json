@@ -1,0 +1,121 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-30T19:06:44.314448+00:00",
+    "git_commit": "aad2183",
+    "suite": "lofar",
+    "scale": "500M",
+    "target": "netra",
+    "warmup": 1,
+    "iterations": 3
+  },
+  "system": {
+    "os": "Linux 7.0.0-38-generic (#38~24.04.4-Ubuntu SMP PREEMPT_DYNAMIC Mon Sep 14 16:37:11 UTC 2)",
+    "cpu_model": "Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz",
+    "cpu_cores": "6 Physical / 12 Logical",
+    "ram_total_gb": 31.16,
+    "python_version": "3.12.3",
+    "versions": {
+      "netra_validator": "0.1.0",
+      "polars": "1.43.1",
+      "duckdb": "1.5.5",
+      "numpy": "2.5.3",
+      "pyarrow": "25.0.0"
+    }
+  },
+  "dataset": {
+    "path": "/home/nitin/netra/netra-validator/benchmarks/data/synthetic/lofar_500M.parquet",
+    "size_bytes": 8248582232,
+    "rows": 500000000
+  },
+  "contract": "/home/nitin/netra/netra-validator/benchmarks/configs/lofar_telemetry_odcs.yaml",
+  "statistics": {
+    "wall_time_seconds": {
+      "median": 196.6558,
+      "mean": 193.403,
+      "std": 10.5604,
+      "min": 181.5989,
+      "max": 201.9543
+    },
+    "engine_time_seconds": {
+      "median": 196.6556,
+      "mean": 193.3947,
+      "std": 10.5517,
+      "min": 181.5975,
+      "max": 201.9311
+    },
+    "peak_rss_mb": {
+      "median": 27576.84,
+      "mean": 25783.1033,
+      "std": 3201.7212,
+      "min": 22086.61,
+      "max": 27685.86
+    },
+    "throughput_mb_s": {
+      "median": 40.0,
+      "mean": 40.76,
+      "std": 2.2772,
+      "min": 38.96,
+      "max": 43.32
+    },
+    "row_velocity_m_rows_s": {
+      "median": 2.54,
+      "mean": 2.59,
+      "std": 0.1418,
+      "min": 2.48,
+      "max": 2.75
+    }
+  },
+  "raw_iterations": [
+    {
+      "target_name": "netra",
+      "wall_time_seconds": 181.5989,
+      "engine_time_seconds": 181.5975,
+      "peak_rss_mb": 27576.84,
+      "rows_evaluated": 500000000,
+      "throughput_mb_s": 43.32,
+      "row_velocity_m_rows_s": 2.75,
+      "passed": false,
+      "quarantined_rows": 4233329,
+      "anomalies_detected": 8,
+      "extra_meta": {
+        "polars_threads": 12,
+        "duckdb_threads": 12,
+        "exit_code": 0
+      }
+    },
+    {
+      "target_name": "netra",
+      "wall_time_seconds": 201.9543,
+      "engine_time_seconds": 201.9311,
+      "peak_rss_mb": 22086.61,
+      "rows_evaluated": 500000000,
+      "throughput_mb_s": 38.96,
+      "row_velocity_m_rows_s": 2.48,
+      "passed": false,
+      "quarantined_rows": 4233329,
+      "anomalies_detected": 8,
+      "extra_meta": {
+        "polars_threads": 12,
+        "duckdb_threads": 12,
+        "exit_code": 0
+      }
+    },
+    {
+      "target_name": "netra",
+      "wall_time_seconds": 196.6558,
+      "engine_time_seconds": 196.6556,
+      "peak_rss_mb": 27685.86,
+      "rows_evaluated": 500000000,
+      "throughput_mb_s": 40.0,
+      "row_velocity_m_rows_s": 2.54,
+      "passed": false,
+      "quarantined_rows": 4233329,
+      "anomalies_detected": 8,
+      "extra_meta": {
+        "polars_threads": 12,
+        "duckdb_threads": 12,
+        "exit_code": 0
+      }
+    }
+  ]
+}

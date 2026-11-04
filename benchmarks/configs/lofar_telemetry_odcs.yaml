@@ -1,0 +1,173 @@
+apiVersion: v3.1.0
+kind: DataContract
+version: 1.0.0
+status: active
+dataset:
+  name: lofar_station_telemetry
+
+# Row-Level Rules
+# -----------------------------------
+schema:
+- name: lofar_station_telemetry
+  logicalType: object
+  properties:
+  - id: ambient_temp_c_prop
+    name: ambient_temp_c
+    logicalType: number
+    physicalType: Float64
+    required: true
+    logicalTypeOptions:
+      minimum: -25.0
+      maximum: 50.0  # Catches -273.15C and +650.0C thermal spikes
+  - id: antenna_type_prop
+    name: antenna_type
+    logicalType: string
+    physicalType: Categorical
+    required: true
+    quality:
+    - metric: invalidValues
+      mustBe: 0
+      arguments:
+        validValues:
+          - LBA
+          - HBA
+
+  - id: firmware_version_prop
+    name: firmware_version
+    logicalType: string
+    physicalType: String
+    required: true
+    logicalTypeOptions:
+      pattern: '^LOFAR2\.0-rc4$'
+  - id: frequency_mhz_prop
+    name: frequency_mhz
+    logicalType: number
+    physicalType: Float64
+    required: true
+    logicalTypeOptions:
+      minimum: 10.0
+      maximum: 240.0
+  - id: gps_sync_status_prop
+    name: gps_sync_status
+    logicalType: string
+    physicalType: Categorical
+    required: true
+    quality:
+    - metric: invalidValues
+      mustBe: 0
+      arguments:
+        validValues:
+          - LOCKED
+          - DRIFTING
+          - LOST_SYNC
+  - id: hardware_status_prop
+    name: hardware_status
+    logicalType: string
+    physicalType: Categorical
+    required: true
+    quality:
+    - metric: invalidValues
+      mustBe: 0
+      arguments:
+        validValues:
+        - OK
+        - DOWN
+        - SHORT
+        - FLAT
+        - SPURIOUS
+        - OSCILLATING
+  - id: packet_drop_rate_prop
+    name: packet_drop_rate
+    logicalType: number
+    physicalType: Float64
+    required: true
+    logicalTypeOptions:
+      minimum: 0.0
+      maximum: 0.05
+  - id: rcu_id_prop
+    name: rcu_id
+    logicalType: integer
+    physicalType: Int32
+    required: true
+    logicalTypeOptions:
+      minimum: 0
+      maximum: 191  # Catches RCU ID 255
+  - id: rfi_flag_prop
+    name: rfi_flag
+    logicalType: boolean
+    physicalType: Boolean
+    required: true
+  - id: signal_power_db_prop
+    name: signal_power_db
+    logicalType: number
+    physicalType: Float64
+    required: true
+    logicalTypeOptions:
+      minimum: -140.0
+      maximum: 0.0  # Catches glitched +99.9 dBm spikes
+  - id: station_id_prop
+    name: station_id
+    logicalType: string
+    physicalType: String
+    required: true
+    logicalTypeOptions:
+      pattern: '^(CS|RS|DE|FR|UK|SE|PL|IE)\d{3}$'  # Catches ERR_STN_999
+  - id: timestamp_utc_prop
+    name: timestamp_utc
+    logicalType: timestamp
+    physicalType: Datetime(time_unit='ms', time_zone=None)
+    required: true  # Catches LOST_SYNC null dropouts
+
+  # Global-Level Rules
+  # -----------------------------------
+  quality:
+    # Check 1: Frequency Band vs Antenna Hardware Alignment
+    - type: sql
+      name: check_antenna_frequency_alignment
+      description: Verifies LBAs stay within 10-90 MHz and HBAs stay within 110-240 MHz
+      query: |
+        SELECT COUNT(*)
+        FROM {object}
+        WHERE (antenna_type = 'LBA' AND frequency_mhz > 90.0)
+           OR (antenna_type = 'HBA' AND frequency_mhz < 110.0)
+      mustBe: 0
+      severity: CRITICAL
+
+    # Check 2: Physical State Correlation (Short circuit cannot output positive power)
+    - type: sql
+      name: check_short_circuit_signal_attenuation
+      description: Verifies that shorted units report deeply attenuated power (<= -100 dBm)
+      query: |
+        SELECT COUNT(*)
+        FROM {object}
+        WHERE hardware_status = 'SHORT'
+          AND signal_power_db > -100.0
+      mustBe: 0
+      severity: CRITICAL
+
+    # Check 3: State Consistency (SPURIOUS hardware state must flag RFI)
+    - type: sql
+      name: check_spurious_rfi_correlation
+      description: Ensures any unit in a SPURIOUS state has rfi_flag set to true
+      query: |
+        SELECT COUNT(*)
+        FROM {object}
+        WHERE hardware_status = 'SPURIOUS'
+          AND rfi_flag = false
+      mustBe: 0
+      severity: WARNING
+
+    # Check 4: Network Retransmission / Composite Key Uniqueness
+    - type: sql
+      name: check_composite_pk_telemetry_uniqueness
+      description: Ensures [timestamp_utc, station_id, rcu_id] composite primary key is unique
+      query: |
+        SELECT COUNT(*) FROM (
+          SELECT timestamp_utc, station_id, rcu_id
+          FROM {object}
+          WHERE timestamp_utc IS NOT NULL
+          GROUP BY timestamp_utc, station_id, rcu_id
+          HAVING COUNT(*) > 1
+        )
+      mustBe: 0
+      severity: CRITICAL

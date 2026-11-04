@@ -1,0 +1,87 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-30T20:40:31.493854+00:00",
+    "git_commit": "aad2183",
+    "suite": "lofar",
+    "scale": "800M",
+    "target": "netra",
+    "warmup": 0,
+    "iterations": 1
+  },
+  "system": {
+    "os": "Linux 7.0.0-38-generic (#38~24.04.4-Ubuntu SMP PREEMPT_DYNAMIC Mon Sep 14 16:37:11 UTC 2)",
+    "cpu_model": "Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz",
+    "cpu_cores": "6 Physical / 12 Logical",
+    "ram_total_gb": 31.16,
+    "python_version": "3.12.3",
+    "versions": {
+      "netra_validator": "0.1.0",
+      "polars": "1.43.1",
+      "duckdb": "1.5.5",
+      "numpy": "2.5.3",
+      "pyarrow": "25.0.0"
+    }
+  },
+  "dataset": {
+    "path": "/home/nitin/netra/netra-validator/benchmarks/data/synthetic/lofar_800M.parquet",
+    "size_bytes": 13197702701,
+    "rows": 800000000
+  },
+  "contract": "/home/nitin/netra/netra-validator/benchmarks/configs/lofar_telemetry_odcs.yaml",
+  "statistics": {
+    "wall_time_seconds": {
+      "median": 378.6495,
+      "mean": 378.6495,
+      "std": 0.0,
+      "min": 378.6495,
+      "max": 378.6495
+    },
+    "engine_time_seconds": {
+      "median": 378.6493,
+      "mean": 378.6493,
+      "std": 0.0,
+      "min": 378.6493,
+      "max": 378.6493
+    },
+    "peak_rss_mb": {
+      "median": 21137.84,
+      "mean": 21137.84,
+      "std": 0.0,
+      "min": 21137.84,
+      "max": 21137.84
+    },
+    "throughput_mb_s": {
+      "median": 33.24,
+      "mean": 33.24,
+      "std": 0.0,
+      "min": 33.24,
+      "max": 33.24
+    },
+    "row_velocity_m_rows_s": {
+      "median": 2.11,
+      "mean": 2.11,
+      "std": 0.0,
+      "min": 2.11,
+      "max": 2.11
+    }
+  },
+  "raw_iterations": [
+    {
+      "target_name": "netra",
+      "wall_time_seconds": 378.6495,
+      "engine_time_seconds": 378.6493,
+      "peak_rss_mb": 21137.84,
+      "rows_evaluated": 800000000,
+      "throughput_mb_s": 33.24,
+      "row_velocity_m_rows_s": 2.11,
+      "passed": false,
+      "quarantined_rows": 6773792,
+      "anomalies_detected": 8,
+      "extra_meta": {
+        "polars_threads": 12,
+        "duckdb_threads": 4,
+        "exit_code": 0
+      }
+    }
+  ]
+}

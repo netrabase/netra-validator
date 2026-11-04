@@ -1,0 +1,87 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-31T10:35:51.185208+00:00",
+    "git_commit": "2d3c212",
+    "suite": "lofar",
+    "scale": "3B",
+    "target": "netra",
+    "warmup": 0,
+    "iterations": 1
+  },
+  "system": {
+    "os": "Linux 7.0.0-1014-aws (#14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026)",
+    "cpu_model": "Intel(R) Xeon(R) 6975P-C",
+    "cpu_cores": "16 Physical / 32 Logical",
+    "ram_total_gb": 61.77,
+    "python_version": "3.12.3",
+    "versions": {
+      "netra_validator": "0.1.0",
+      "polars": "1.43.1",
+      "duckdb": "1.5.5",
+      "numpy": "2.5.3",
+      "pyarrow": "25.0.0"
+    }
+  },
+  "dataset": {
+    "path": "/mnt/netra_data/validator-staging/benchmarks/data/synthetic/lofar_3B.parquet",
+    "size_bytes": 49491398243,
+    "rows": 3000000000
+  },
+  "contract": "/mnt/netra_data/validator-staging/benchmarks/configs/lofar_telemetry_odcs.yaml",
+  "statistics": {
+    "wall_time_seconds": {
+      "median": 858.1425,
+      "mean": 858.1425,
+      "std": 0.0,
+      "min": 858.1425,
+      "max": 858.1425
+    },
+    "engine_time_seconds": {
+      "median": 858.1277,
+      "mean": 858.1277,
+      "std": 0.0,
+      "min": 858.1277,
+      "max": 858.1277
+    },
+    "peak_rss_mb": {
+      "median": 61409.78,
+      "mean": 61409.78,
+      "std": 0.0,
+      "min": 61409.78,
+      "max": 61409.78
+    },
+    "throughput_mb_s": {
+      "median": 55.0,
+      "mean": 55.0,
+      "std": 0.0,
+      "min": 55.0,
+      "max": 55.0
+    },
+    "row_velocity_m_rows_s": {
+      "median": 3.5,
+      "mean": 3.5,
+      "std": 0.0,
+      "min": 3.5,
+      "max": 3.5
+    }
+  },
+  "raw_iterations": [
+    {
+      "target_name": "netra",
+      "wall_time_seconds": 858.1425,
+      "engine_time_seconds": 858.1277,
+      "peak_rss_mb": 61409.78,
+      "rows_evaluated": 3000000000,
+      "throughput_mb_s": 55.0,
+      "row_velocity_m_rows_s": 3.5,
+      "passed": false,
+      "quarantined_rows": 25413614,
+      "anomalies_detected": 8,
+      "extra_meta": {
+        "polars_threads": 32,
+        "duckdb_threads": 8,
+        "exit_code": 0
+      }
+    }
+  ]
+}

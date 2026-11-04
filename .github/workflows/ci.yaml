@@ -1,0 +1,47 @@
+name: CI
+
+# 1. Triggers
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# 2. Concurrency
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-gate:
+    name: Code Quality & Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Set up Python 3.10
+        run: uv python install 3.10
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      # E. Scoped Quality Checks
+      - name: Check Formatting
+        run: uv run ruff format --check src/ tests/
+
+      - name: Lint Code
+        run: uv run ruff check src/ tests/
+
+      - name: Static Type Check
+        run: uv run mypy src/ tests/
+
+      - name: Run Tests
+        run: uv run pytest -v
